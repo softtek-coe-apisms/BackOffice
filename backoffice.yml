@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: backoffice
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backoffice
+    spec:
+      containers:
+        - name: backoffice
+          image: 'softtekcoeapisms/backoffice:1.0'
+          ports:
+            - containerPort: 80
+          env:
+          - name: ProductCatalogUrl
+            value: http://productcatalogservice/
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backoffice
+  labels:
+    name: backoffice
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: backoffice
+  type: LoadBalancer
